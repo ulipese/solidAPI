@@ -21,11 +21,21 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public User getUser(@PathVariable("userId") String userId) {
-        return userService.getUserById(Integer.parseInt(userId));
+        return userService.getUserById(userId);
     }
 
     @PostMapping
     public User createUser(@RequestBody User user) {
         return userService.saveUser(user);
+    }
+
+    @PutMapping("/{userId}")
+    public void updateUser(@PathVariable String userId, @RequestBody User user) {
+        userService.updateUser(userId, user);
+    }
+
+    @DeleteMapping("/{userId}")
+    public void deleteUser(@PathVariable("userId") String userId) {
+        userService.deleteUser(Integer.parseInt(userId));
     }
 }

@@ -13,14 +13,47 @@ public class UserService {
     UserRepository userRepository;
 
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        try {
+            return userRepository.findAll();
+        } catch (Exception err) {
+            System.err.println(err.getMessage());
+            return null;
+        }
     }
 
-    public User getUserById(int id) {
-        return userRepository.findById(id).get();
+    public User getUserById(String id) {
+        try {
+            return userRepository.findById(id);
+        } catch (Exception err) {
+            System.err.println(err.getMessage());
+            return null;
+        }
     }
 
     public User saveUser(User user) {
-        return userRepository.save(user);
+        try {
+            return userRepository.save(user);
+        } catch (Exception err) {
+            System.err.println(err.getMessage());
+            return null;
+        }
+    }
+
+    public void updateUser(String userId, User user) {
+        try {
+            if (userRepository.findById(userId) != null) {
+                userRepository.updateById(userId, user.getName(), user.getAge());
+            }
+        } catch (Exception err) {
+            System.err.println(err.getMessage());
+        }
+    }
+
+    public void deleteUser(int userId) {
+        try {
+            userRepository.deleteById(userId);
+        } catch (Exception err) {
+            System.err.println(err.getMessage());
+        }
     }
 }

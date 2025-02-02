@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 public class User {
     @Id
-    private String Id;
+    private String _id;
     private String name;
     private Integer age;
 }
