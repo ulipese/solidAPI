@@ -1,6 +1,7 @@
 package com.ulipese.solid.services;
 
 import com.ulipese.solid.entities.User;
+import com.ulipese.solid.interfaces.services.UserServiceInterface;
 import com.ulipese.solid.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,52 +9,37 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserService {
+public class UserService implements UserServiceInterface {
     @Autowired
     UserRepository userRepository;
 
+    @Override
     public List<User> getAllUsers() {
-        try {
-            return userRepository.findAll();
-        } catch (Exception err) {
-            System.err.println(err.getMessage());
-            return null;
-        }
+        return userRepository.findAll();
     }
 
+    @Override
     public User getUserById(String id) {
-        try {
-            return userRepository.findById(id);
-        } catch (Exception err) {
-            System.err.println(err.getMessage());
-            return null;
-        }
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    @Override
     public User saveUser(User user) {
-        try {
-            return userRepository.save(user);
-        } catch (Exception err) {
-            System.err.println(err.getMessage());
-            return null;
-        }
+        return userRepository.save(user);
     }
 
+    @Override
     public void updateUser(String userId, User user) {
-        try {
-            if (userRepository.findById(userId) != null) {
-                userRepository.updateById(userId, user.getName(), user.getAge());
-            }
-        } catch (Exception err) {
-            System.err.println(err.getMessage());
-        }
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        existingUser.setName(user.getName());
+        existingUser.setAge(user.getAge());
+        userRepository.save(existingUser);
     }
 
-    public void deleteUser(int userId) {
-        try {
-            userRepository.deleteById(userId);
-        } catch (Exception err) {
-            System.err.println(err.getMessage());
-        }
+    @Override
+    public void deleteUser(String userId) {
+        userRepository.deleteById(userId);
     }
 }
